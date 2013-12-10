@@ -1,67 +1,35 @@
-<Lems xmlns="http://www.neuroml.org/lems/0.6"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.neuroml.org/lems/0.6 https://raw.github.com/LEMS/LEMS/master/Schemas/LEMS/LEMS_v0.6.xsd">
+<Lems>
 
 
-<ComponentType name="IVBolusFirstCompartment"
-    description="
-    Put a description of the model
-    ">
+<!-- Specify which component to run -->
+<Target component="sim1"/>
+
+<!-- Include core NeuroML2 ComponentType definitions -->
+<Include file="Cells.xml"/>
+<Include file="Networks.xml"/>
+<Include file="Simulation.xml"/>
+
+<Include file="IVBolusFirstCompartment.xml"/>
+
+<!-- parameter set for chaotic busting -->
+<IVBolusFirstCompartment id="hr_chaotic" a="1.0" b="2.8" c="1.0"
+    d="5.0" s="4.0" I="3.94" x1="-1.6" r="0.01"
+    x0="-1.6" y0="-1.0" z0="1.0"/>
+
+
+<network id="net1">
+    <population id="hr_chaotic_pop" component="hr_chaotic" size="1"/>
+</network>
+
+
+<Simulation id="sim1" length="2000s" step="0.001s" target="net1" method="rk4">
+
+    <Display id="d1" title="x (membrane potential) timeseries"
+        timeScale="1s" xmin="-100" xmax="2100" ymin="-2" ymax="2">
+        <Line id ="x" quantity="hr_chaotic_pop[0]/x" scale="1"
+            color="#000000" timeScale="1s"/>
+    </Display>
     
-    <Parameter name="a" dimension="none" description="cubic term in x
-        nullcline"/>
-    <Parameter name="b" dimension="none" description="quadratic term in x
-        nullcline"/>
-    <Parameter name="c" dimension="none" description="constant term in
-        y nullcline"/>
-    <Parameter name="d" dimension="none" description="quadratic term
-        in y nullcline"/>
-    <Parameter name="I" dimension="none" description="plays the role
-        of an external injected current"/>
-    <Parameter name="r" dimension="none" description="timescale
-        separation between slow and fast subsystem (0 &lt; r &lt;&lt; 1)"/>
-    <Parameter name="s" dimension="none" description="related to
-        adaptation"/>
-    <Parameter name="x1" dimension="none" description="related to the
-        system's resting potential"/>
-
-    <!-- Initial Conditions -->
-    <Parameter name="x0" dimension="none"/>
-    <Parameter name="y0" dimension="none"/>
-    <Parameter name="z0" dimension="none"/>
-
-    <Constant name="SEC" dimension="time" value="1s"/>
-
-    <Exposure name="x" dimension="none"/>
-    <Exposure name="y" dimension="none"/>
-    <Exposure name="z" dimension="none"/>
-    <Exposure name="P" dimension="none"/>
-    <Exposure name="Q" dimension="none"/>
-    <Exposure name="R" dimension="none"/>
-    
-    <Dynamics>
-        
-        <StateVariable name="x" dimension="none" exposure="x"/>
-        <StateVariable name="y" dimension="none" exposure="y"/>
-        <StateVariable name="z" dimension="none" exposure="z"/>
-
-        <DerivedVariable name="P" dimension="none" exposure="P" value="y - a * x^3 + b * x^2 + I"/>
-        <DerivedVariable name="Q" dimension="none" exposure="Q" value="c - d * x^2 - y"/>
-        <DerivedVariable name="R" dimension="none" exposure="R" value="s * ( x - x1 ) - z"/>
-        <TimeDerivative variable="x" value="(P - z) / SEC"/>
-        <TimeDerivative variable="y" value="Q / SEC"/>
-        <TimeDerivative variable="z" value="r * R / SEC"/>
-        
-        <OnStart>
-            <StateAssignment variable="x" value="x0"/>
-            <StateAssignment variable="y" value="y0"/>
-            <StateAssignment variable="z" value="z0"/>
-        </OnStart>
-        
-    </Dynamics>
-    
-</ComponentType>
-
+</Simulation>
 
 </Lems>
-

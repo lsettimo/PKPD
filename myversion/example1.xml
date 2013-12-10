@@ -2,14 +2,61 @@
 
     <Target component="simset" />
 
-    <Dimension name="concentration" c="1" />
+    <Dimension name="voltage" m="1" l="2" t="-3" i="-1" />
     <Dimension name="time" t="1" />
-    
+    <Dimension name="per_time" t="-1" />
+    <Dimension name="conductance" m="-1" l="-2" t="3" i="2" />
+    <Dimension name="capacitance" m="-1" l="-2" t="4" i="2" />
+    <Dimension name="current" i="1" />
 
 
-    <Unit symbol="mg/L" dimension="concentration" power="1" />
-    <Unit symbol="h" dimension="time" power="1" />
-    
+    <ComponentType name="iaf1">
+        <Parameter name="threshold" dimension="voltage" />
+        <Parameter name="refractoryPeriod" dimension="time" />
+        <Parameter name="capacitance" dimension="capacitance" />
+    </ComponentType>
+
+
+    <Unit symbol="mV" dimension="voltage" power="-3" />
+    <Unit symbol="ms" dimension="time" power="-3" />
+    <Unit symbol="pS" dimension="conductance" power="-12" />
+    <Unit symbol="nS" dimension="conductance" power="-9" />
+    <Unit symbol="uF" dimension="capacitance" power="-6" />
+    <Unit symbol="nF" dimension="capacitance" power="-9" />
+    <Unit symbol="pF" dimension="capacitance" power="-12" />
+    <Unit symbol="per_ms" dimension="per_time" power="3" />
+    <Unit symbol="pA" dimension="current" power="-12" />
+
+    <iaf1 id="celltype_a" threshold="-30 mV" refractoryPeriod="2 ms" capacitance="3uF" />
+    <!-- or -->
+    <Component id="ctb" type="iaf1" threshold="-30 mV" refractoryPeriod="2 ms" capacitance="1uF" />
+
+
+    <ComponentType name="iaf2" extends="iaf1">
+        <Fixed parameter="threshold" value="-45mV" />
+    </ComponentType>
+
+    <ComponentType name="iaf3" extends="iaf1">
+        <Parameter name="leakConductance" dimension="conductance" />
+        <Parameter name="leakReversal" dimension="voltage" />
+        <Parameter name="deltaV" dimension="voltage" />
+
+        <EventPort name="spikes-in" direction="in" />
+        <Exposure name="v" dimension="voltage" />
+
+        <Dynamics>
+            <StateVariable name="v" exposure="v" dimension="voltage" />
+            <TimeDerivative variable="v" value="leakConductance * (leakReversal - v) / capacitance" />
+
+            <OnEvent port="spikes-in">
+                <StateAssignment variable="v" value="v + deltaV" />
+            </OnEvent>
+        </Dynamics>
+
+    </ComponentType>
+
+
+
     <ComponentType name="spikeGenerator">
         <Parameter name="period" dimension="time" />
         <EventPort name="a" direction="out" />
@@ -242,7 +289,8 @@
         <Display id="d0" title="Example 1: Dimensions, Units, ComponentTypes and Components" 
             timeScale="1ms" xmin="-10" xmax="90" ymin="-90" ymax="60">
             <Line id="tsince" quantity="p1[0]/tsince" scale="1ms" timeScale="1ms" color="#00c000" />
-            
+            <Line id="p3v" quantity="p3[0]/v" scale="1mV" timeScale="1ms" color="#0000f0" />
+            <Line id="p0v" quantity="hhpop[0]/v" scale="1mV" timeScale="1ms" color="#ff4040" />
         </Display>
 
 
