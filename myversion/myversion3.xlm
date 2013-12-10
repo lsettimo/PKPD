@@ -10,12 +10,15 @@
     <Dimension name="current" i="1" />
 
 
-    <ComponentType name="iaf1">
+    <ComponentType name="component1">
         <Parameter name="threshold" dimension="voltage" />
         <Parameter name="refractoryPeriod" dimension="time" />
         <Parameter name="capacitance" dimension="capacitance" />
     </ComponentType>
 
+<!-- the symbol is used in the value of a dimensional quantity -->
+<!-- dimension Reference to a component of type Dimension. -->
+<!-- power: The power of ten that scales this unit from the SI unit of the same dimension -->
 
     <Unit symbol="mV" dimension="voltage" power="-3" />
     <Unit symbol="ms" dimension="time" power="-3" />
@@ -26,17 +29,18 @@
     <Unit symbol="pF" dimension="capacitance" power="-12" />
     <Unit symbol="per_ms" dimension="per_time" power="3" />
     <Unit symbol="pA" dimension="current" power="-12" />
-
-    <iaf1 id="celltype_a" threshold="-30 mV" refractoryPeriod="2 ms" capacitance="3uF" />
-    <!-- or -->
-    <Component id="ctb" type="iaf1" threshold="-30 mV" refractoryPeriod="2 ms" capacitance="1uF" />
-
-
-    <ComponentType name="iaf2" extends="iaf1">
+ 
+ <!-- component1 is the component type  -->
+   
+    <component1 id="celltype_a" threshold="-30 mV" refractoryPeriod="2 ms" capacitance="3uF" />
+   
+   <!-- definition of the component type  -->  
+   
+    <ComponentType name="iaf2" extends="component1">
         <Fixed parameter="threshold" value="-45mV" />
     </ComponentType>
 
-    <ComponentType name="iaf3" extends="iaf1">
+    <ComponentType name="iaf3" extends="component1">
         <Parameter name="leakConductance" dimension="conductance" />
         <Parameter name="leakReversal" dimension="voltage" />
         <Parameter name="deltaV" dimension="voltage" />
@@ -47,7 +51,7 @@
         <Dynamics>
             <StateVariable name="v" exposure="v" dimension="voltage" />
             <TimeDerivative variable="v" value="leakConductance * (leakReversal - v) / capacitance" />
-
+<!-- this will define v -->
             <OnEvent port="spikes-in">
                 <StateAssignment variable="v" value="v + deltaV" />
             </OnEvent>
@@ -286,9 +290,10 @@
     <Simulation id="iv-bolus-1compartment" length="80ms" step="0.05ms"
         target="net1">
 
-        <Display id="d0" title="Example 1: Dimensions, Units, ComponentTypes and Components" 
+        <Display id="d0" title="Example 1" 
             timeScale="1ms" xmin="-10" xmax="90" ymin="-90" ymax="60">
             <Line id="Cp" quantity="hhpop[0]/v" scale="1mV" timeScale="1ms" color="#ff4040" />
+	    <Line id="tsince" quantity="p1[0]/tsince" scale="1ms" timeScale="1ms" color="#00c000" />
         </Display>
 
 
