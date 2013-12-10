@@ -5,7 +5,7 @@
 
 <ComponentType name="IVBolusFirstCompartment"
     description="
-    Put a description of the model
+    Put a description of the model development
     ">
     
     <Parameter name="a" dimension="none" description="cubic term in x
