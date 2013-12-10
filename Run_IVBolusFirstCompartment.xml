@@ -9,7 +9,7 @@
 <Include file="Networks.xml"/>
 <Include file="Simulation.xml"/>
 
-<Include file="HindmarshRose3d.xml"/>
+<Include file="IVBolusFirstCompartment.xml"/>
 
 <!-- parameter set for chaotic busting -->
 <hindmarshRoseCell id="hr_chaotic" a="1.0" b="2.8" c="1.0"
