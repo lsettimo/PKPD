@@ -1,0 +1,67 @@
+<Lems xmlns="http://www.neuroml.org/lems/0.6"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.neuroml.org/lems/0.6 https://raw.github.com/LEMS/LEMS/master/Schemas/LEMS/LEMS_v0.6.xsd">
+
+
+<ComponentType name="IVBolusFirstCompartment"
+    description="
+    Put a description of the model
+    ">
+    
+    <Parameter name="a" dimension="none" description="cubic term in x
+        nullcline"/>
+    <Parameter name="b" dimension="none" description="quadratic term in x
+        nullcline"/>
+    <Parameter name="c" dimension="none" description="constant term in
+        y nullcline"/>
+    <Parameter name="d" dimension="none" description="quadratic term
+        in y nullcline"/>
+    <Parameter name="I" dimension="none" description="plays the role
+        of an external injected current"/>
+    <Parameter name="r" dimension="none" description="timescale
+        separation between slow and fast subsystem (0 &lt; r &lt;&lt; 1)"/>
+    <Parameter name="s" dimension="none" description="related to
+        adaptation"/>
+    <Parameter name="x1" dimension="none" description="related to the
+        system's resting potential"/>
+
+    <!-- Initial Conditions -->
+    <Parameter name="x0" dimension="none"/>
+    <Parameter name="y0" dimension="none"/>
+    <Parameter name="z0" dimension="none"/>
+
+    <Constant name="SEC" dimension="time" value="1s"/>
+
+    <Exposure name="x" dimension="none"/>
+    <Exposure name="y" dimension="none"/>
+    <Exposure name="z" dimension="none"/>
+    <Exposure name="P" dimension="none"/>
+    <Exposure name="Q" dimension="none"/>
+    <Exposure name="R" dimension="none"/>
+    
+    <Dynamics>
+        
+        <StateVariable name="x" dimension="none" exposure="x"/>
+        <StateVariable name="y" dimension="none" exposure="y"/>
+        <StateVariable name="z" dimension="none" exposure="z"/>
+
+        <DerivedVariable name="P" dimension="none" exposure="P" value="y - a * x^3 + b * x^2 + I"/>
+        <DerivedVariable name="Q" dimension="none" exposure="Q" value="c - d * x^2 - y"/>
+        <DerivedVariable name="R" dimension="none" exposure="R" value="s * ( x - x1 ) - z"/>
+        <TimeDerivative variable="x" value="(P - z) / SEC"/>
+        <TimeDerivative variable="y" value="Q / SEC"/>
+        <TimeDerivative variable="z" value="r * R / SEC"/>
+        
+        <OnStart>
+            <StateAssignment variable="x" value="x0"/>
+            <StateAssignment variable="y" value="y0"/>
+            <StateAssignment variable="z" value="z0"/>
+        </OnStart>
+        
+    </Dynamics>
+    
+</ComponentType>
+
+
+</Lems>
+
