@@ -1,0 +1,35 @@
+<Lems xmlns="http://www.neuroml.org/lems/0.6"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.neuroml.org/lems/0.6 https://raw.github.com/LEMS/LEMS/master/Schemas/LEMS/LEMS_v0.6.xsd">
+    
+    <Dimension name="per_time" t="-1" />
+    <Unit symbol="r" dimension="per_time" power="0"/>
+    
+    <ComponentType name="IVBolusFirstCompartment"
+        description=" Put a description of the model development ">
+        
+        <!-- Initial Conditions -->
+        <Parameter name="ab0" dimension="none"/>
+	<Parameter name="halflife" dimension="none"/>
+        
+        <Constant name="k" dimension="per_time" value="0.693/halflife"/>
+        
+        <Exposure name="ab" dimension="none"/>
+        
+        <Dynamics>
+            
+            <StateVariable name="ab" dimension="none" exposure="ab"/>
+            
+            <TimeDerivative variable="ab" value="-k * ab"/>
+            
+            <OnStart>
+                <StateAssignment variable="ab" value="ab0"/>
+            </OnStart>
+            
+        </Dynamics>
+        
+    </ComponentType>
+    
+    
+</Lems>
+

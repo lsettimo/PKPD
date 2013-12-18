@@ -4,7 +4,7 @@
     
     <Include file="Simulation.xml"/>
     
-    <Include file="IVBolusFirstCompartment.xml"/>
+    <Include file="IVBolusFirstCompartment-1.xml"/>
     
     <IVBolusFirstCompartment id="ivbolus" halflife="3" ab0="3"/>
     
